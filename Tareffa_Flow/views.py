@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse
 
-def home(request):
-    return render(request, 'Tareffa_Flow/home.html')
+
+def Tareffa_Flow_list(request):
+    return render(request, "Tareffa_Flow/Tareffa_Flow_list.html")
