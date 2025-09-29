@@ -1,18 +1,9 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Tarefa Flow</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-  </head>
-  <body>
-     <nav class="navbar bg-dark mb-4" data-bs-theme="dark">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">Tareffa Flow</a>
-        </div>
-    </nav>
-    <main class="container">
+{% extends 'base.html' %}
+{% block page_title %}
+Lista de Tarefas
+
+{% block content %}
+
         <h1 class="mb-4">Lista de Tarefas</h1>
         {% if Tarefas %}
         <table class="table table-striped">
@@ -52,8 +43,6 @@
         {% else %}
         <p>Nenhuma tarefa encontrada.</p>
         {% endif %}
-        
-    </main>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
-  </body>
-</html>
+        <a href="{% url 'tarefa_create' %}" class="btn btn-dark">Nova Tarefa</a>
+{% endblock content %}
+{% endblock page_title %}
