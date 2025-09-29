@@ -17,9 +17,10 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path
-from Tareffa_Flow.views import Tareffa_Flow_list
+from Tareffa_Flow.views import TarefaListView, TarefaCreateView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", Tareffa_Flow_list, name="Tareffa_Flow_list"),
+    path("", TarefaListView.as_view(), name="tarefa_list"),
+    path("create/", TarefaCreateView.as_view(), name="tarefa_create"),
 ]
