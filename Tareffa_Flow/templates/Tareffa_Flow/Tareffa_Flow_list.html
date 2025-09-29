@@ -32,9 +32,9 @@ Lista de Tarefas
                     <td>{{ tarefa.finished_at|default:"-" }}</td>
                     <td>{{ tarefa.criador|default:"-" }}</td>
                     <td>
-                        <a href="#" class="btn btn-sm btn-success" style="width: 70px;">concluir </a>
-                        <a href="#" class="btn btn-sm btn-primary" style="width: 70px;">Editar </a>
-                        <a href="#" class="btn btn-sm btn-danger" style="width: 70px;">Excluir</a>
+                        <a href="{% url 'tarefa_complete' pk=tarefa.pk %}" class="btn btn-sm btn-success" style="width: 70px;">concluir </a>
+                        <a href="{% url 'tarefa_update' pk=tarefa.pk %}" class="btn btn-sm btn-primary" style="width: 70px;">Editar </a>
+                        <a href="{% url 'tarefa_delete' pk=tarefa.pk %}" class="btn btn-sm btn-danger" style="width: 70px;">Excluir</a>
 
                 </tr>
                 {% endfor %}
