@@ -14,6 +14,7 @@
     </nav>
     <main class="container">
         <h1 class="mb-4">Lista de Tarefas</h1>
+        {% if Tarefas %}
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -25,6 +26,7 @@
                     <th scope="col">Data de entrega</th>
                     <th scope="col">Terminada em</th>
                     <th scope="col">Criada por</th>
+                    <th scope="col">Ações</th>
                 </tr>
             </thead>
             <tbody>
@@ -34,19 +36,23 @@
                     <td>{{ tarefa.title }}</td>
                     <td>{{ tarefa.descricao }}</td>
                     <td>{{ tarefa.concluida|yesno:"Sim,Não" }}</td>
-                    <td>{{ tarefa.created_at }}</td>
-                    <td>{{ tarefa.deadline }}</td>
-                    <td>{{ tarefa.finished_at }}</td>
-                    <td>{{ tarefa.criador }}</td>
+                    <td>{{ tarefa.created_at|default:"-" }}</td>
+                    <td>{{ tarefa.deadline|default:"-" }}</td>
+                    <td>{{ tarefa.finished_at|default:"-" }}</td>
+                    <td>{{ tarefa.criador|default:"-" }}</td>
+                    <td>
+                        <a href="#" class="btn btn-sm btn-success" style="width: 70px;">concluir </a>
+                        <a href="#" class="btn btn-sm btn-primary" style="width: 70px;">Editar </a>
+                        <a href="#" class="btn btn-sm btn-danger" style="width: 70px;">Excluir</a>
 
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="4" class="text-center">Nenhuma tarefa encontrada.</td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
+        {% else %}
+        <p>Nenhuma tarefa encontrada.</p>
+        {% endif %}
+        
     </main>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
   </body>
