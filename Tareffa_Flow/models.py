@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.utils import timezone
 
 
 class Tarefa(models.Model):
@@ -22,5 +23,10 @@ class Tarefa(models.Model):
     class Meta:
         ordering = ["-deadline"]
 
+    def mark_has_completed(self):
+        if not self.finished_at:
+            self.finished_at = timezone.now()
+            self.save()
+
     def __str__(self):
-        return self.title
+        return str(self.title) if self.title is not None else ""
