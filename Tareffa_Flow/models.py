@@ -19,5 +19,8 @@ class Tarefa(models.Model):
         blank=True,
     )
 
+    class Meta:
+        ordering = ["-deadline"]
+
     def __str__(self):
         return self.title
