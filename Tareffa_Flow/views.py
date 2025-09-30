@@ -48,9 +48,6 @@ class AuthLogoutView(LogoutView):
     pass
 
 
-from django.views.generic import TemplateView
-
-
 class HomeView(TemplateView):
     """Home pública com slider, cards e seção sobre (notícias dinâmicas)."""
 
@@ -78,11 +75,73 @@ class DashboardView(LoginRequiredMixin, ListView):
         )
 
 
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_protect
+
+
+# ---------- Todas as Tasks (cards) ----------
+class AllTasksView(LoginRequiredMixin, TemplateView):
+    """
+    Dashboard em cards mostrando:
+      - tasks sem responsável (abertas)
+      - tasks concluídas (com quem concluiu)
+    """
+
+    template_name = "Tareffa_Flow/tasks_all.html"
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        # Abertas (sem responsável e não concluídas)
+        ctx["open_unassigned"] = Tarefa.objects.filter(
+            criador__isnull=True, concluida=False
+        ).order_by("deadline")
+        # Concluídas (podem ou não ter responsável; mostrar nome se houver)
+        ctx["done_tasks"] = Tarefa.objects.filter(concluida=True).order_by(
+            "-finished_at", "deadline"
+        )
+        return ctx
+
+
+# ---------- Excluir direto (POST) ----------
+@method_decorator(csrf_protect, name="dispatch")
+class TarefaDeleteDirectView(LoginRequiredMixin, View):
+    """
+    Exclui a task imediatamente (sem página de confirmação) usando POST
+    e redireciona de volta para 'tasks_all'.
+    Permissão: responsável (criador) ou staff.
+    """
+
+    def post(self, request, pk):
+        tarefa = get_object_or_404(Tarefa, pk=pk)
+        if request.user.is_staff or tarefa.criador == request.user:
+            tarefa.delete()
+            messages.success(request, "Tarefa excluída.")
+        else:
+            messages.error(request, "Você não tem permissão para excluir esta tarefa.")
+        return redirect("tasks_all")
+
+
 # ---------- Permissões ----------
 class SomenteResponsavelMixin(UserPassesTestMixin):
+    """Permite acesso ao responsável (criador) ou staff.
+    Funciona com views que têm get_object() OU apenas com model + pk na URL.
+    """
+
+    def _get_target_object(self):
+        # Se a view tiver get_object (Detail/Update/Delete), usa.
+        if hasattr(self, "get_object"):
+            try:
+                return self.get_object()
+            except Exception:
+                pass
+        # Caso contrário, tenta buscar pelo model e pk na URL.
+        model = getattr(self, "model", Tarefa)
+        pk = self.kwargs.get("pk")
+        return get_object_or_404(model, pk=pk)
+
     def test_func(self):
-        tarefa = self.get_object()
-        return self.request.user.is_staff or tarefa.criador == self.request.user
+        obj = self._get_target_object()
+        return self.request.user.is_staff or obj.criador == self.request.user
 
 
 # ---------- Tarefas ----------
@@ -131,12 +190,16 @@ class TarefaDeleteView(LoginRequiredMixin, SomenteResponsavelMixin, DeleteView):
 
 
 class TarefaCompleteView(LoginRequiredMixin, SomenteResponsavelMixin, View):
+    model = Tarefa  # <--- adicione esta linha
+
     def get(self, request, pk):
         tarefa = get_object_or_404(Tarefa, pk=pk)
+        from datetime import date
+
         tarefa.finished_at = date.today()
         tarefa.concluida = True
         tarefa.save()
-        return redirect("tarefa_list")
+        return redirect("tasks_all")
 
 
 class TarefaClaimView(LoginRequiredMixin, View):
@@ -146,7 +209,8 @@ class TarefaClaimView(LoginRequiredMixin, View):
         tarefa = get_object_or_404(Tarefa, pk=pk)
         tarefa.criador = request.user
         tarefa.save()
-        return redirect("tarefa_detail", pk=tarefa.pk)
+        messages.success(request, "Tarefa atribuída a você.")
+        return redirect("dashboard")  # <- vai para o seu dashboard pessoal
 
 
 # ---------- Comentários ----------

@@ -161,3 +161,12 @@ CACHES = {
         "TIMEOUT": 60 * 10,
     }
 }
+
+LOGOUT_REDIRECT_URL = "home"
+LOGIN_REDIRECT_URL = "dashboard"
+
+STATIC_URL = "static/"
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+STATICFILES_DIRS = [BASE_DIR / "Tareffa_Flow" / "static"]

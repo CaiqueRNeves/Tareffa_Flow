@@ -3,6 +3,16 @@
 
 {% block content %}
 
+<style>
+
+  #tfCarousel .carousel-item img{
+    height: 420px;  
+    width: 100%;
+    object-fit: cover;
+  }
+</style>
+
+
 <!-- SLIDER -->
 <div id="tfCarousel" class="carousel slide mb-5" data-bs-ride="carousel">
   <div class="carousel-indicators">
@@ -26,12 +36,14 @@
       </div>
     </div>
     <div class="carousel-item">
-      <img src="https://images.unsplash.com/photo-1556761175-b413da4baf72?q=80&w=1600&auto=format&fit=crop" class="d-block w-100" alt="Tecnologia 3">
-      <div class="carousel-caption text-end bg-dark bg-opacity-50 rounded p-3">
-        <h5>Moderno e descolado</h5>
-        <p>Uma experiência fluida para gerenciar qualquer projeto.</p>
-      </div>
-    </div>
+  <img src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=1600&auto=format&fit=crop"
+       class="d-block w-100" alt="Tecnologia 3">
+  <div class="carousel-caption text-end bg-dark bg-opacity-50 rounded p-3">
+    <h5>Moderno e descolado</h5>
+    <p>Uma experiência fluida para gerenciar qualquer projeto.</p>
+  </div>
+</div>
+
   </div>
   <button class="carousel-control-prev" type="button" data-bs-target="#tfCarousel" data-bs-slide="prev">
     <span class="carousel-control-prev-icon"></span>
