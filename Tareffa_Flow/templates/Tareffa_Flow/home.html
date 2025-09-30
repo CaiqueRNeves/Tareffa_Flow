@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+{% block page_title %}Bem-vindo ao Tareffa Flow{% endblock %}
+
+{% block content %}
+
+<!-- SLIDER -->
+<div id="tfCarousel" class="carousel slide mb-5" data-bs-ride="carousel">
+  <div class="carousel-indicators">
+    <button type="button" data-bs-target="#tfCarousel" data-bs-slide-to="0" class="active" aria-current="true"></button>
+    <button type="button" data-bs-target="#tfCarousel" data-bs-slide-to="1"></button>
+    <button type="button" data-bs-target="#tfCarousel" data-bs-slide-to="2"></button>
+  </div>
+  <div class="carousel-inner rounded-4 overflow-hidden shadow">
+    <div class="carousel-item active">
+      <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=1600&auto=format&fit=crop" class="d-block w-100" alt="Tecnologia 1">
+      <div class="carousel-caption text-start bg-dark bg-opacity-50 rounded p-3">
+        <h5>Organize seus projetos</h5>
+        <p>Crie tarefas, comente e acompanhe o progresso em um só lugar.</p>
+      </div>
+    </div>
+    <div class="carousel-item">
+      <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=1600&auto=format&fit=crop" class="d-block w-100" alt="Tecnologia 2">
+      <div class="carousel-caption bg-dark bg-opacity-50 rounded p-3">
+        <h5>Colabore com seu time</h5>
+        <p>Assuma tarefas (“tomar para si”) e mantenha todos alinhados.</p>
+      </div>
+    </div>
+    <div class="carousel-item">
+      <img src="https://images.unsplash.com/photo-1556761175-b413da4baf72?q=80&w=1600&auto=format&fit=crop" class="d-block w-100" alt="Tecnologia 3">
+      <div class="carousel-caption text-end bg-dark bg-opacity-50 rounded p-3">
+        <h5>Moderno e descolado</h5>
+        <p>Uma experiência fluida para gerenciar qualquer projeto.</p>
+      </div>
+    </div>
+  </div>
+  <button class="carousel-control-prev" type="button" data-bs-target="#tfCarousel" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon"></span>
+    <span class="visually-hidden">Anterior</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#tfCarousel" data-bs-slide="next">
+    <span class="carousel-control-next-icon"></span>
+    <span class="visually-hidden">Próximo</span>
+  </button>
+</div>
+
+<!-- NOTÍCIAS (dinâmicas) -->
+<section class="mb-5">
+  <h2 class="mb-3">Novidades em Tecnologia</h2>
+
+  {% if news %}
+    <div class="row g-4">
+      {% for n in news %}
+        <div class="col-md-4">
+          <div class="card h-100 shadow">
+            {% if n.image %}
+              <img src="{{ n.image }}" class="card-img-top" alt="Imagem da notícia">
+            {% endif %}
+            <div class="card-body d-flex flex-column">
+              <div class="small text-muted mb-1">{{ n.source }}</div>
+              <h5 class="card-title">{{ n.title }}</h5>
+              {% if n.summary %}
+                <p class="card-text">{{ n.summary|striptags|truncatewords:24 }}</p>
+              {% endif %}
+              <div class="mt-auto">
+                <a target="_blank" href="{{ n.link }}" class="btn btn-outline-primary btn-sm">Ler mais</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="text-muted">Não foi possível carregar as notícias agora. Tente novamente em instantes.</p>
+  {% endif %}
+</section>
+
+<!-- SEÇÃO SOBRE -->
+<section class="py-5 bg-light rounded-4 px-3 px-md-5">
+  <div class="row align-items-center g-4">
+    <div class="col-md-6">
+      <img src="https://images.unsplash.com/photo-1551836022-d5d88e9218df?q=80&w=1400&auto=format&fit=crop"
+           alt="Startup Tech" class="img-fluid rounded-4 shadow">
+    </div>
+    <div class="col-md-6">
+      <h2 class="mb-3">O que é o Tareffa Flow?</h2>
+      <p class="lead">Um sistema de gerenciamento de projetos <strong>moderno e descolado</strong>, feito para
+        equipes que precisam de agilidade, clareza e colaboração.</p>
+      <ul>
+        <li>Crie, edite e conclua tarefas facilmente.</li>
+        <li>Comente e acompanhe atividades em tempo real.</li>
+        <li>“Tome para si” tarefas e assuma responsabilidades.</li>
+      </ul>
+      {% if not user.is_authenticated %}
+        <a href="{% url 'signup' %}" class="btn btn-primary me-2">Começar agora</a>
+        <a href="{% url 'login' %}" class="btn btn-outline-secondary">Já tenho conta</a>
+      {% else %}
+        <a href="{% url 'dashboard' %}" class="btn btn-primary">Ir para meu Dashboard</a>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+{% endblock %}

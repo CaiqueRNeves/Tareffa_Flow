@@ -12,7 +12,9 @@ from .views import (
 )
 
 urlpatterns = [
-    path("", DashboardView.as_view(), name="dashboard"),
+    path(
+        "dashboard/", DashboardView.as_view(), name="dashboard"
+    ),  # <- mudou de "" p/ "dashboard/"
     path("tarefas/", TarefaListView.as_view(), name="tarefa_list"),
     path("tarefas/create/", TarefaCreateView.as_view(), name="tarefa_create"),
     path("tarefas/<int:pk>/", TarefaDetailView.as_view(), name="tarefa_detail"),

@@ -17,7 +17,7 @@
   <body>
    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
   <div class="container-fluid">
-    <a class="navbar-brand" href="{% url 'dashboard' %}">Tareffa Flow</a>
+    <a class="navbar-brand" href="{% url 'home' %}">Tareffa Flow</a>
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
             aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -27,36 +27,37 @@
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ms-auto">
 
-        <!-- Home (sempre aparece) -->
+        <!-- Home sempre visível -->
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'dashboard' %}">Home</a>
+          <a class="nav-link" href="{% url 'home' %}">Home</a>
         </li>
 
         {% if user.is_authenticated %}
-  <!-- Avatar + menu do usuário -->
-  <li class="nav-item dropdown d-flex align-items-center">
-    <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" href="#" id="userMenu"
-       role="button" data-bs-toggle="dropdown" aria-expanded="false">
-      <img
-        src="{% if user.profile.avatar %}{{ user.profile.avatar.url }}{% else %}https://cdn-icons-png.flaticon.com/512/149/149071.png{% endif %}"
-        alt="avatar de {{ user.username }}"
-        class="tf-avatar"
-      />
-      <span>{{ user.username }}</span>
-    </a>
-    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenu">
-      <li><a class="dropdown-item" href="{% url 'profile' %}">Meu Perfil</a></li>
-      <li><a class="dropdown-item" href="{% url 'profile_edit' %}">Editar Perfil</a></li>
-      <li><hr class="dropdown-divider"></li>
-      <li><a class="dropdown-item text-danger" href="{% url 'logout' %}">Sair</a></li>
-    </ul>
-  </li>
-{% else %}
-  <!-- Visitante -->
-  <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Login</a></li>
-  <li class="nav-item"><a class="nav-link" href="{% url 'signup' %}">Cadastro</a></li>
-{% endif %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'dashboard' %}">Meu Dashboard</a>
+          </li>
 
+          <li class="nav-item dropdown d-flex align-items-center">
+            <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" href="#" id="userMenu"
+               role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <img
+                src="{% if user.profile.avatar %}{{ user.profile.avatar.url }}{% else %}https://cdn-icons-png.flaticon.com/512/149/149071.png{% endif %}"
+                alt="avatar de {{ user.username }}"
+                class="tf-avatar"
+              />
+              <span>{{ user.username }}</span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenu">
+              <li><a class="dropdown-item" href="{% url 'profile' %}">Meu Perfil</a></li>
+              <li><a class="dropdown-item" href="{% url 'profile_edit' %}">Editar Perfil</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item text-danger" href="{% url 'logout' %}">Sair</a></li>
+            </ul>
+          </li>
+        {% else %}
+          <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Login</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'signup' %}">Cadastrar</a></li>
+        {% endif %}
 
       </ul>
     </div>

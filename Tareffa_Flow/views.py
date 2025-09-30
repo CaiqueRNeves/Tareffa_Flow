@@ -1,5 +1,4 @@
 from datetime import date
-
 from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -25,6 +24,8 @@ from .forms import (
     CommentForm,
     SignUpForm,
 )
+from django.core.cache import cache
+from .services.news import fetch_news
 
 
 # ---------- Auth ----------
@@ -45,6 +46,24 @@ class AuthLoginView(LoginView):
 
 class AuthLogoutView(LogoutView):
     pass
+
+
+from django.views.generic import TemplateView
+
+
+class HomeView(TemplateView):
+    """Home pública com slider, cards e seção sobre (notícias dinâmicas)."""
+
+    template_name = "Tareffa_Flow/home.html"
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        news = cache.get("home_news")
+        if news is None:
+            news = fetch_news(limit_total=6)
+            cache.set("home_news", news, 60 * 10)  # 10 min
+        ctx["news"] = news
+        return ctx
 
 
 # ---------- Dashboard ----------

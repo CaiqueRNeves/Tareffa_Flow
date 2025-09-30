@@ -153,3 +153,11 @@ MEDIA_ROOT = BASE_DIR / "media"
 
 from django.conf import settings
 from django.conf.urls.static import static
+
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+        "LOCATION": "tareffa-flow-cache",
+        "TIMEOUT": 60 * 10,
+    }
+}

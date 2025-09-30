@@ -1,5 +1,4 @@
 from django.contrib import admin
-
 from django.urls import path, include
 from Tareffa_Flow.views import (
     AuthLoginView,
@@ -7,12 +6,15 @@ from Tareffa_Flow.views import (
     SignUpView,
     ProfileView,
     ProfileEditView,
+    HomeView,
 )
 from django.contrib.auth.views import PasswordChangeView, PasswordChangeDoneView
-from django.conf import settings
-from django.conf.urls.static import static
 
 urlpatterns = [
+    # Home pública
+    path("", HomeView.as_view(), name="home"),
+    # Admin
+    path("admin/", admin.site.urls),
     # Autenticação
     path("accounts/login/", AuthLoginView.as_view(), name="login"),
     path("accounts/logout/", AuthLogoutView.as_view(), name="logout"),
@@ -20,7 +22,7 @@ urlpatterns = [
     # Perfil
     path("accounts/profile/", ProfileView.as_view(), name="profile"),
     path("accounts/profile/edit/", ProfileEditView.as_view(), name="profile_edit"),
-    # Alterar senha (views nativas)
+    # Alterar senha
     path(
         "accounts/password/change/",
         PasswordChangeView.as_view(
@@ -40,6 +42,9 @@ urlpatterns = [
     path("", include("Tareffa_Flow.urls")),
 ]
 
+# mídia em dev
+from django.conf import settings
+from django.conf.urls.static import static
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
