@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block page_title %}Meu Perfil{% endblock %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Meu Perfil</h2>
+  <div class="card mt-3">
+    <div class="card-body">
+      {% if user.profile.avatar %}
+      <img src="{{ user.profile.avatar.url }}" alt="Avatar" class="img-thumbnail mb-3" style="max-width:150px;">
+      {% else %}
+      <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="Sem avatar" class="img-thumbnail mb-3" style="max-width:150px;">
+      {% endif %}
+
+      <p><strong>Usuário:</strong> {{ user.username }}</p>
+      <p><strong>Nome:</strong> {{ user.first_name|default:"—" }} {{ user.last_name|default:"" }}</p>
+      <p><strong>Email:</strong> {{ user.email|default:"—" }}</p>
+      <p><strong>Membro desde:</strong> {{ user.date_joined|date:"d/m/Y H:i" }}</p>
+
+      <a href="{% url 'profile_edit' %}" class="btn btn-secondary me-2">Editar perfil</a>
+      <a href="{% url 'password_change' %}" class="btn btn-outline-primary me-2">Alterar senha</a>
+      <a href="{% url 'dashboard' %}" class="btn btn-primary">Voltar ao Dashboard</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

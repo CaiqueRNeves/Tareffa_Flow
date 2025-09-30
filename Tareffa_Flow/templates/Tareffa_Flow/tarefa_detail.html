@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block page_title %}Tarefa: {{ tarefa.title }}{% endblock %}
+{% block content %}
+<h1>{{ tarefa.title }}</h1>
+<p><strong>Responsável:</strong> {{ tarefa.criador|default:"—" }}</p>
+<p><strong>Descrição:</strong> {{ tarefa.descricao|default:"—" }}</p>
+<p><strong>Entrega:</strong> {{ tarefa.deadline|date:"d/m/Y H:i" }}</p>
+<p><strong>Status:</strong> {% if tarefa.concluida %}Concluída{% else %}Pendente{% endif %}</p>
+
+<div class="mb-3">
+  {% if not tarefa.concluida %}
+    <form method="post" action="{% url 'tarefa_claim' tarefa.pk %}" class="d-inline">
+      {% csrf_token %}
+      <button class="btn btn-sm btn-outline-primary">Tomar para mim</button>
+    </form>
+    <a class="btn btn-sm btn-outline-success" href="{% url 'tarefa_complete' tarefa.pk %}">Concluir</a>
+  {% endif %}
+  <a class="btn btn-sm btn-secondary" href="{% url 'tarefa_update' tarefa.pk %}">Editar</a>
+  <a class="btn btn-sm btn-danger" href="{% url 'tarefa_delete' tarefa.pk %}">Excluir</a>
+</div>
+
+<hr>
+<h3>Comentários</h3>
+{% if tarefa.comments.all %}
+  <ul class="list-group mb-3">
+    {% for c in tarefa.comments.all %}
+      <li class="list-group-item">
+        <div class="small text-muted">{{ c.autor.username }} • {{ c.created_at|date:"d/m/Y H:i" }}</div>
+        <div>{{ c.texto }}</div>
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p>Sem comentários ainda.</p>
+{% endif %}
+
+<form method="post" action="{% url 'comment_create' tarefa.pk %}">
+  {% csrf_token %}
+  {{ comment_form.as_p }}
+  <button class="btn btn-primary">Comentar</button>
+</form>
+{% endblock %}
