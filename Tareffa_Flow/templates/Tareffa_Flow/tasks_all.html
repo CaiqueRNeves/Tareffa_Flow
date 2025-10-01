@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% block page_title %}Todas as Tasks{% endblock %}
+{% block content %}
+
+<div class="d-flex align-items-center justify-content-between mb-3">
+  <h1 class="h3 m-0">Todas as Tasks</h1>
+  <div>
+    <a class="btn btn-primary" href="{% url 'tarefa_create' %}">Nova Tarefa</a>
+    <a class="btn btn-outline-secondary" href="{% url 'dashboard' %}">Meu Dashboard</a>
+  </div>
+</div>
+
+{% if messages %}
+  {% for m in messages %}
+    <div class="alert alert-{{ m.tags }} mt-2">{{ m }}</div>
+  {% endfor %}
+{% endif %}
+
+<!-- ABERTAS (sem responsável) -->
+<section class="mb-5">
+  <h2 class="h5">Abertas (sem responsável)</h2>
+  {% if open_unassigned %}
+    <div class="row g-4">
+      {% for t in open_unassigned %}
+        <div class="col-md-4">
+          <div class="card h-100 shadow">
+            <div class="card-body d-flex flex-column">
+              <div class="small text-muted mb-1">#{{ t.id }}</div>
+              <h5 class="card-title">{{ t.title }}</h5>
+              {% if t.descricao %}<p class="card-text">{{ t.descricao|truncatewords:30 }}</p>{% endif %}
+              <p class="card-text"><strong>Entrega:</strong> {{ t.deadline|date:"d/m/Y H:i" }}</p>
+
+              <div class="mt-auto d-flex gap-2">
+                {% if user.is_authenticated %}
+                  <!-- Tomar para mim -->
+                  <form method="post" action="{% url 'tarefa_claim' t.pk %}">
+                    {% csrf_token %}
+                    <button class="btn btn-sm btn-outline-primary">Tomar para mim</button>
+                  </form>
+
+                  <!-- Excluir (direto) -->
+                  <form method="post" action="{% url 'tarefa_delete_direct' t.pk %}">
+                    {% csrf_token %}
+                    <button class="btn btn-sm btn-outline-danger">Excluir</button>
+                  </form>
+                {% else %}
+                  <a class="btn btn-sm btn-outline-primary disabled">Tomar para mim</a>
+                  <a class="btn btn-sm btn-outline-danger disabled">Excluir</a>
+                {% endif %}
+              </div>
+            </div>
+            <div class="card-footer d-flex justify-content-between">
+              <small class="text-muted">Criada: {{ t.created_at|date:"d/m/Y H:i" }}</small>
+              <a href="{% url 'tarefa_detail' t.pk %}" class="small">detalhes</a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="text-muted">Não há tasks abertas sem responsável.</p>
+  {% endif %}
+</section>
+
+<!-- CONCLUÍDAS -->
+<section class="mb-5">
+  <h2 class="h5">Concluídas</h2>
+  {% if done_tasks %}
+    <div class="row g-4">
+      {% for t in done_tasks %}
+        <div class="col-md-4">
+          <div class="card h-100 border-success shadow">
+            <div class="card-body d-flex flex-column">
+              <div class="small text-muted mb-1">#{{ t.id }}</div>
+              <h5 class="card-title">{{ t.title }}</h5>
+              {% if t.descricao %}<p class="card-text">{{ t.descricao|truncatewords:30 }}</p>{% endif %}
+              <p class="card-text mb-1"><strong>Entrega:</strong> {{ t.deadline|date:"d/m/Y H:i" }}</p>
+              <p class="card-text"><strong>Concluída em:</strong> {{ t.finished_at|date:"d/m/Y H:i" }}</p>
+              <p class="card-text"><strong>Responsável:</strong> {{ t.criador|default:"—" }}</p>
+
+              <div class="mt-auto d-flex gap-2">
+                {% if user.is_authenticated %}
+                  <!-- Excluir (direto) - permitido se dono ou staff -->
+                  <form method="post" action="{% url 'tarefa_delete_direct' t.pk %}">
+                    {% csrf_token %}
+                    <button class="btn btn-sm btn-outline-danger">Excluir</button>
+                  </form>
+                {% else %}
+                  <a class="btn btn-sm btn-outline-danger disabled">Excluir</a>
+                {% endif %}
+              </div>
+            </div>
+            <div class="card-footer d-flex justify-content-between">
+              <small class="text-success fw-semibold">Status: Concluída</small>
+              <a href="{% url 'tarefa_detail' t.pk %}" class="small">detalhes</a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="text-muted">Ainda não há tasks concluídas.</p>
+  {% endif %}
+</section>
+
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block page_title %}Meu Dashboard{% endblock %}
+{% block content %}
+<h1>Minhas Tarefas</h1>
+<p><a class="btn btn-dark" href="{% url 'tarefa_create' %}">Nova tarefa</a></p>
+{% if minhas_tarefas %}
+<table class="table table-striped">
+  <thead>
+  <tr><th>#</th><th>Título</th><th>Entrega</th><th>Status</th><th>Ações</th></tr>
+  </thead>
+  <tbody>
+  {% for t in minhas_tarefas %}
+    <tr>
+      <td>{{ t.id }}</td>
+      <td><a href="{% url 'tarefa_detail' t.pk %}">{{ t.title }}</a></td>
+      <td>{{ t.deadline|date:"d/m/Y H:i" }}</td>
+      <td>{% if t.concluida %}Concluída{% else %}Pendente{% endif %}</td>
+      <td>
+        <a class="btn btn-sm btn-secondary" href="{% url 'tarefa_update' t.pk %}">Editar</a>
+        <a class="btn btn-sm btn-danger" href="{% url 'tarefa_delete' t.pk %}">Excluir</a>
+      </td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p>Você ainda não tem tarefas atribuídas.</p>
+{% endif %}
+{% endblock %}

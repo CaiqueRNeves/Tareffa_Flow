@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block page_title %}Editar Perfil{% endblock %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Editar Perfil</h2>
+
+  {% if messages %}
+    {% for m in messages %}
+      <div class="alert alert-{{ m.tags }} mt-3">{{ m }}</div>
+    {% endfor %}
+  {% endif %}
+
+  <form method="post" enctype="multipart/form-data" class="col-lg-6 mt-3">
+    {% csrf_token %}
+    <fieldset class="mb-3">
+      <legend>Informações</legend>
+      {{ form.as_p }}
+    </fieldset>
+
+    <fieldset class="mb-3">
+      <legend>Foto de Perfil</legend>
+      {{ profile_form.avatar }}
+      {% if user.profile.avatar %}
+        <div class="mt-2">
+          <small>Atual:</small><br>
+          <img src="{{ user.profile.avatar.url }}" alt="Avatar" class="img-thumbnail" style="max-width:150px;">
+        </div>
+      {% endif %}
+    </fieldset>
+
+    <button class="btn btn-primary" type="submit">Salvar alterações</button>
+    <a href="{% url 'profile' %}" class="btn btn-outline-secondary ms-2">Cancelar</a>
+  </form>
+</div>
+{% endblock %}

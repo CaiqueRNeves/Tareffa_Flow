@@ -29,23 +29,26 @@ DEBUG = config("DEBUG", default=True, cast=bool)
 ALLOWED_HOSTS = config("ALLOWED_HOSTS", cast=Csv())
 
 
-# Application definition
-
-INSTALLED_APPS = [
+# --- APPS ---
+DJANGO_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "Tareffa_Flow.apps.TareffaFlowConfig",
+]
+
+THIRD_PARTY_APPS = [
     "crispy_forms",
     "crispy_bootstrap5",
 ]
 
-CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
-CRISPY_TEMPLATE_PACK = "bootstrap5"
-CRISPY_AUTO_FIELD = "django.db.models.BigAutoField"
+MY_APPS = [
+    "Tareffa_Flow.apps.TareffaFlowConfig",
+]
+
+INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + MY_APPS
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -57,15 +60,19 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = "setuo.urls"
+
+# --- TEMPLATES ---
+
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [BASE_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
+                "django.template.context_processors.debug",
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
@@ -74,8 +81,18 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "setuo.wsgi.application"
+# --- CRISPY ---
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap5"
 
+# --- AUTH redirects ---
+LOGIN_REDIRECT_URL = "dashboard"
+LOGOUT_REDIRECT_URL = "login"
+LOGIN_URL = "login"
+
+
+ROOT_URLCONF = "setuo.urls"
+WSGI_APPLICATION = "setuo.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
@@ -128,3 +145,28 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# Configurações de arquivos de mídia (upload de imagens)
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
+
+
+from django.conf import settings
+from django.conf.urls.static import static
+
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+        "LOCATION": "tareffa-flow-cache",
+        "TIMEOUT": 60 * 10,
+    }
+}
+
+LOGOUT_REDIRECT_URL = "home"
+LOGIN_REDIRECT_URL = "dashboard"
+
+STATIC_URL = "static/"
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+STATICFILES_DIRS = [BASE_DIR / "Tareffa_Flow" / "static"]
